@@ -2,7 +2,7 @@
 
 #include "PintWinAPI.h"
 #include "PintD2D.h"
-
+#include "PintUI.h"
 #include "App.h"
 
 PintHWResourceManager DisplayManager;
@@ -46,6 +46,12 @@ LRESULT CALLBACK callbackProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
+void PintHWResourceManager::OnResourceLoaded() {
+	OutputDebugStringA("test");
+	ID2D1SolidColorBrush* MenuColor = this->AddBrushResource(D2D1::ColorF(0.0, 0.0, 1.0));
+	this->AddDrawResource(D2D1::RectF(3.0f, 3.0f, 30.0f, 30.0f), MenuColor);
+
+}
 
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {

@@ -143,10 +143,12 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="PintD2D.cpp" />
     <ClCompile Include="PintMain.cpp" />
+    <ClCompile Include="PintUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="PintD2D.h" />
+    <ClInclude Include="PintUI.h" />
     <ClInclude Include="PintWinAPI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
