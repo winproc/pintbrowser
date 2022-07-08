@@ -17,7 +17,8 @@ bool Application::Open(int nShowCode) {
 
 	RegisterClass(&wndMain);
 
-	this->m_hWindow = CreateWindowExW(0, wndMain.lpszClassName, L"Pint Browser", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, m_hAppInstance, NULL);
+	const DWORD styleFlags = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+	this->m_hWindow = CreateWindowExW(0, wndMain.lpszClassName, L"Pint Browser", styleFlags, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, m_hAppInstance, NULL);
 	if (!m_hWindow) {
 		return false;
 	}

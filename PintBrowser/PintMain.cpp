@@ -5,23 +5,47 @@
 
 #include "App.h"
 
+PintHWResourceManager DisplayManager;
+
 LRESULT CALLBACK callbackProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
-	switch (uMsg) {
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-	case WM_PAINT:
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hwnd, &ps);
+	HDC hdc;
 
-		FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+	switch (uMsg) {
+
+	case WM_CREATE:
+		if (FAILED(DisplayManager.InitFactory())) {
+			return -1;
+		}
+		return 0;
+	case WM_DESTROY:
+		
+		DisplayManager.DiscardResources();
+		DisplayManager.DestroyFactory();
+		PostQuitMessage(0);
+
+		return 0;
+
+	case WM_PAINT:
+	
+		PAINTSTRUCT ps;
+		hdc = BeginPaint(hwnd, &ps);
+
+		if (SUCCEEDED(DisplayManager.LoadResources())) {
+			HRESULT hr = DisplayManager.HWDraw();
+			if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET) {
+				DisplayManager.DiscardResources();
+			}
+		}
 
 		EndPaint(hwnd, &ps);
+		
+		return 0;
 	}
 
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
+
 
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
@@ -39,6 +63,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	bool bOpen = main.Open(nCmdShow);
 
 	if (bOpen) {
+		
+		DisplayManager.hTargetWindow = main.m_hWindow;
+
 		main.KeepAlive();
 	}
 	return 0;

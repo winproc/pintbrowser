@@ -9,4 +9,14 @@ private:
 	ID2D1HwndRenderTarget* pRenderTarget;
 	ID2D1SolidColorBrush* pBrush;
 
+public:
+	HWND hTargetWindow;
+	HRESULT LoadResources();
+	HRESULT InitFactory();
+
+	HRESULT HWDraw();
+	void ResizeTarget();
+
+	void DiscardResources();
+	void DestroyFactory();
 };
