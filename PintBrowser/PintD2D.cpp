@@ -13,6 +13,7 @@ HRESULT PintHWResourceManager::InitFactory() {
 	return D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &this->pFactory);
 }
 
+// load essential direct2d resources
 HRESULT PintHWResourceManager::LoadResources() {
 	HRESULT hres = S_OK;
 	if (pRenderTarget == NULL) {
@@ -29,6 +30,7 @@ HRESULT PintHWResourceManager::LoadResources() {
 	return hres;
 }
 
+// add new resource for GPU to draw
 void PintHWResourceManager::AddDrawResource(D2D1_RECT_F inst, ID2D1SolidColorBrush* ptrBrush) {
 	DrawResource dr;
 	dr.rInst = inst;
@@ -37,6 +39,7 @@ void PintHWResourceManager::AddDrawResource(D2D1_RECT_F inst, ID2D1SolidColorBru
 	this->lDrawList.push_back(dr);
 }
 
+// add new brush resource to color drawing resources
 ID2D1SolidColorBrush* PintHWResourceManager::AddBrushResource(D2D1_COLOR_F col) {
 	ID2D1SolidColorBrush* brs;
 
@@ -59,6 +62,7 @@ void PintHWResourceManager::ResizeTarget() {
 	}
 }
 
+// main draw call
 HRESULT PintHWResourceManager::HWDraw() {
 	this->pRenderTarget->BeginDraw();
 
@@ -72,6 +76,7 @@ HRESULT PintHWResourceManager::HWDraw() {
 	return this->pRenderTarget->EndDraw();
 }
 
+// gpu resource discarding
 void PintHWResourceManager::DiscardResources() {
 	for (int i = 0; i < lpBrushResources.size(); i++) {
 		SafeRelease(&lpBrushResources[i]);
@@ -80,6 +85,7 @@ void PintHWResourceManager::DiscardResources() {
 	SafeRelease(&this->pRenderTarget);
 }
 
+// complete cutoff
 void PintHWResourceManager::DestroyFactory() {
 	SafeRelease(&this->pFactory);
 }

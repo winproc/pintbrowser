@@ -7,6 +7,7 @@ bool Application::InitResources(HINSTANCE hAppInstance) {
 	return true;
 }
 
+// entry function
 bool Application::Open(int nShowCode) {
 
 	WNDCLASS wndMain = {};
@@ -17,7 +18,7 @@ bool Application::Open(int nShowCode) {
 
 	RegisterClass(&wndMain);
 
-	const DWORD styleFlags = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+	const DWORD styleFlags = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 	this->m_hWindow = CreateWindowExW(0, wndMain.lpszClassName, L"Pint Browser", styleFlags, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, m_hAppInstance, NULL);
 	if (!m_hWindow) {
 		return false;
@@ -29,6 +30,7 @@ bool Application::Open(int nShowCode) {
 
 };
 
+// message loop
 void Application::KeepAlive() {
 	MSG msg = {};
 	while (GetMessageA(&msg, NULL, 0, 0) > 0) {

@@ -46,10 +46,15 @@ LRESULT CALLBACK callbackProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
+std::vector<Frame> lUIList;
+
 void PintHWResourceManager::OnResourceLoaded() {
-	OutputDebugStringA("test");
-	ID2D1SolidColorBrush* MenuColor = this->AddBrushResource(D2D1::ColorF(0.0, 0.0, 1.0));
-	this->AddDrawResource(D2D1::RectF(3.0f, 3.0f, 30.0f, 30.0f), MenuColor);
+
+	for (int i = 0; i < lUIList.size(); i++) {
+		Frame frame = lUIList[i];
+		ID2D1SolidColorBrush* ColorRes = this->AddBrushResource(frame.BackgroundColor);
+		this->AddDrawResource(frame.Rect, ColorRes);
+	}
 
 }
 
@@ -69,6 +74,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	bool bOpen = main.Open(nCmdShow);
 
 	if (bOpen) {
+
+		Frame bar;
+		bar.Create(D2D1::RectF(0.0f, 0.0f, 1200.0f, 30.0f), D2D1::ColorF(0.122, 0.122, 0.122), &lUIList);
 		
 		DisplayManager.hTargetWindow = main.m_hWindow;
 

@@ -9,7 +9,8 @@ bool Frame::Intersects(D2D1_RECT_F rc) {
 	return false;
 }
 
-void Frame::Create(D2D1_RECT_F strct, PintRGB col) {
+void Frame::Create(D2D1_RECT_F strct, D2D1_COLOR_F col, std::vector<Frame>* lTarget) {
 	this->Rect = strct;
 	this->BackgroundColor = col;
+	lTarget->push_back(*this);
 }

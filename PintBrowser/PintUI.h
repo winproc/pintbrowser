@@ -1,12 +1,5 @@
 #pragma once
 
-class PintRGB {
-public:
-
-	unsigned short r;
-	unsigned short g;
-	unsigned short b;
-};
 
 class Frame {
 public:
@@ -15,10 +8,11 @@ public:
 	bool Visible = true;
 	bool Highlight = true;
 
-	PintRGB BackgroundColor;
+	D2D1_COLOR_F BackgroundColor;
 	D2D1_RECT_F Rect;
 
-	void Create(D2D1_RECT_F strct, PintRGB col);
+	void Create(D2D1_RECT_F strct, D2D1_COLOR_F col, std::vector<Frame>* lTarget);
 	bool Intersects(D2D1_RECT_F rc);
+	bool IntersectsPoint(D2D1_POINT_2F pCu);
 };
 
