@@ -30,13 +30,14 @@ HRESULT PintHWResourceManager::LoadResources() {
 	return hres;
 }
 
-// add new resource for GPU to draw
-void PintHWResourceManager::AddDrawResource(D2D1_RECT_F inst, ID2D1SolidColorBrush* ptrBrush) {
+// add new resource for the GPU to draw
+int PintHWResourceManager::AddDrawResource(D2D1_RECT_F inst, ID2D1SolidColorBrush* ptrBrush) {
 	DrawResource dr;
 	dr.rInst = inst;
 	dr.pBrush = ptrBrush;
 
 	this->lDrawList.push_back(dr);
+	return this->lDrawList.size() - 1;
 }
 
 // add new brush resource to color drawing resources
@@ -47,6 +48,11 @@ ID2D1SolidColorBrush* PintHWResourceManager::AddBrushResource(D2D1_COLOR_F col) 
 	this->lpBrushResources.push_back(brs);
 
 	return brs;
+}
+
+// brush resource access helper
+ID2D1SolidColorBrush* PintHWResourceManager::GetBrush(int index) {
+	return this->lpBrushResources.at(index);
 }
 
 // not used
@@ -85,7 +91,7 @@ void PintHWResourceManager::DiscardResources() {
 	SafeRelease(&this->pRenderTarget);
 }
 
-// complete cutoff
+// terminate conversation with the gpu
 void PintHWResourceManager::DestroyFactory() {
 	SafeRelease(&this->pFactory);
 }

@@ -28,8 +28,9 @@ public:
 	HRESULT HWDraw();
 	void ResizeTarget(); // unused
 
-	void AddDrawResource(D2D1_RECT_F inst, ID2D1SolidColorBrush* pBrush);
+	int AddDrawResource(D2D1_RECT_F inst, ID2D1SolidColorBrush* pBrush);
 	ID2D1SolidColorBrush* AddBrushResource(D2D1_COLOR_F col);
+	ID2D1SolidColorBrush* GetBrush(int index);
 
 	void DiscardResources();
 	void DestroyFactory();
