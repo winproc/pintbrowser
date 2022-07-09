@@ -53,7 +53,7 @@ LRESULT CALLBACK callbackProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
 			if (lUIList[i].IntersectsPoint(mousePt)) {
 				lUIList[i].OnMouseHover();
-				RedrawWindow(hwnd, 0, 0, RDW_INVALIDATE | RDW_UPDATENOW);
+				InvalidateRect(hwnd, NULL, TRUE);
 			}
 		}
 
@@ -83,6 +83,7 @@ void PintHWResourceManager::OnResourceLoaded() {
 void Frame::OnMouseHover() {
 
 	this->pRes->pBrush = DisplayManager.GetBrush(0);
+	
 }
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
