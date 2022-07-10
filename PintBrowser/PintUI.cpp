@@ -1,4 +1,5 @@
 #include "PintD2D.h"
+
 #include "PintUI.h"
 
 bool Frame::Intersects(D2D1_RECT_F rc) {
@@ -17,9 +18,9 @@ void Frame::Create(D2D1_RECT_F strct, D2D1_COLOR_F col, std::vector<Frame>* lTar
 
 bool Frame::IntersectsPoint(D2D1_POINT_2F pCu) {
 	if (pCu.x > this->Rect.left
-		&& pCu.x < (this->Rect.left + this->Rect.right)
+		&& pCu.x < this->Rect.right
 		&& pCu.y > this->Rect.top
-		&& pCu.y < (this->Rect.top + this->Rect.bottom)) 
+		&& pCu.y < this->Rect.bottom) 
 	{
 		return true;
 	}

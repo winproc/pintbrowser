@@ -75,8 +75,12 @@ HRESULT PintHWResourceManager::HWDraw() {
 	this->pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Black));
 
 	for (DrawResource res : this->lDrawList) {
-		
-		this->pRenderTarget->FillRectangle(res.rInst, res.pBrush);
+		if (res.Rounded) {
+			this->pRenderTarget->FillRoundedRectangle(D2D1::RoundedRect(res.rInst, 1.0f, 1.0f), res.pBrush);
+		}
+		else {
+			this->pRenderTarget->FillRectangle(res.rInst, res.pBrush);
+		}
 	}
 	
 	return this->pRenderTarget->EndDraw();
@@ -89,6 +93,9 @@ void PintHWResourceManager::DiscardResources() {
 	}
 	lpBrushResources.clear();
 	SafeRelease(&this->pRenderTarget);
+
+	OutputDebugStringA("Resources destroyed...");
+	this->ResourcesLoaded = false;
 }
 
 // terminate conversation with the gpu

@@ -1,9 +1,11 @@
 #include <iostream>
 
 #include "PintWinAPI.h"
-#include "PintD2D.h"
 #include "PintUI.h"
+#include "PintD2D.h"
 #include "App.h"
+
+constexpr short HOME_BT = 1;
 
 PintHWResourceManager DisplayManager;
 std::vector<Frame> lUIList;
@@ -52,9 +54,12 @@ LRESULT CALLBACK callbackProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 			mousePt.y = yp;
 
 			if (lUIList[i].IntersectsPoint(mousePt)) {
-				lUIList[i].OnMouseHover();
-				InvalidateRect(hwnd, NULL, TRUE);
+				lUIList[i].OnMouseMove(true);
 			}
+			else {
+				lUIList[i].OnMouseMove(false);
+			}
+			InvalidateRect(hwnd, NULL, TRUE);
 		}
 
 
@@ -66,24 +71,43 @@ LRESULT CALLBACK callbackProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 // called when d2d resources are loaded
 void PintHWResourceManager::OnResourceLoaded() {
 
-	// load hover brush at 0th index (blue)
-	DisplayManager.AddBrushResource(D2D1::ColorF(0.0f, 0.0f, 1.0f, 1.0f));
+	// load hover brush at 0th index (grey)
+	DisplayManager.AddBrushResource(D2D1::ColorF((UINT32)0x404040));
 
 	for (int i = 0; i < lUIList.size(); i++) {
+
 		Frame frame = lUIList[i];
 		ID2D1SolidColorBrush* ColorRes = this->AddBrushResource(frame.BackgroundColor);
 		int index = this->AddDrawResource(frame.Rect, ColorRes);
 		lUIList[i].pRes = &this->lDrawList.at(index);
-
-		OutputDebugStringA("Resources loaded...");
+		if (lUIList[i].Rounded) {
+			lDrawList[index].Rounded = true;
+		}
+		
 	}
+
+	OutputDebugStringA("Resources loaded...");
+	DisplayManager.ResourcesLoaded = true;
 
 }
 
-void Frame::OnMouseHover() {
+// called for every frame when mouse moves
+void Frame::OnMouseMove(bool Hovered) {
+	if (DisplayManager.ResourcesLoaded != true) {
+		return;
+	}
 
-	this->pRes->pBrush = DisplayManager.GetBrush(0);
-	
+	if (Hovered) {
+		this->pRes->pBrush = DisplayManager.GetBrush(0);
+	}
+	else {
+		switch (this->Id) {
+		case HOME_BT:
+			this->pRes->pBrush = DisplayManager.GetBrush(2);
+			break;
+		}
+		
+	}
 }
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow) {
@@ -103,12 +127,16 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	if (bOpen) {
 
-		
-
-		// ui
+		// ui generation
 		Frame bar;
-		bar.Create(D2D1::RectF(0.0f, 0.0f, 1200.0f, 30.0f), D2D1::ColorF(0.122, 0.122, 0.122), &lUIList);
+		bar.Create(D2D1::RectF(0.0f, 0.0f, 1200.0f, 30.0f), D2D1::ColorF((UINT32)0x1f1f1f), &lUIList);
 
+		Frame fHomeButton;
+		fHomeButton.Id = HOME_BT;
+		fHomeButton.Rounded = true;
+		fHomeButton.Create(D2D1::RectF(20.0f, 5.0f, 90.0f, 25.0f), D2D1::ColorF((UINT32)0xffffff), &lUIList);
+
+		// setup
 		DisplayManager.hTargetWindow = main.m_hWindow;
 
 		main.KeepAlive();
